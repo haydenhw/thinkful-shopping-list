@@ -13,7 +13,7 @@ make state
    }
  */
 
-const ShoppingList = () => {
+const ShoppingList = (rootEl) => {
   let id = 1;
   let items = [
     {name: 'shrimp', checked: false, id: id++},
@@ -25,45 +25,52 @@ const ShoppingList = () => {
       newItem.id = id++;
       newItem.check = false;
       items.push(newItem);
-      console.log(items)
       this.renderList();
     },
     deleteItem(itemId) {
+      console.log({itemId})
       items = items.filter(item => item.id !== itemId);
       this.renderList();
     },
     getItems() {
       return items;
     },
-    renderListItem({name, id, checked, onCheck, onDelete}) {
+    renderListItem({name, id, checked, }) {
       let itemClass = "shopping-item";
       if (checked) {
         itemClass += " shopping-item__checked"
       }
-
-      return `
+      const html = $(`
         <li>
           <span class="${itemClass}">${name}</span>
           <div class="shopping-item-controls">
             <button class="shopping-item-toggle">
                 <span class="button-label">check</span>
             </button>
-            <button class="shopping-item-delete">
+            <button class="shopping-item-delete js-shopping-item-delete">
               <span class="button-label">delete</span>
             </button>
           </div>
         </li>
-        `;
+        `);
+
+      const deleteButton = html.find('.js-shopping-item-delete');
+      deleteButton.click(() => this.deleteItem(id));
+
+      return html;
     },
     renderList() {
-      return items.map(item => this.renderListItem(item));
+      const renderedItems = items.map(item => this.renderListItem(item));
+      rootEl.html(renderedItems);
     }
   }
 };
 
 const main = () => {
   //jj
-  const shoppingList = ShoppingList();
+  const listRootEl = $('.js-shopping-list');
+  const shoppingList = ShoppingList(listRootEl);
+
   const itemInputEl = $("#shopping-list-entry").val('fdsa')
 
   $("#js-shopping-list-form").submit(function (event) {
@@ -74,8 +81,8 @@ const main = () => {
   });
 
   const items = shoppingList.getItems();
-  const renderedList = shoppingList.renderList();
-  $('.shopping-list').html(renderedList);
+  shoppingList.renderList();
+
 };
 main();
 
