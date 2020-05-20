@@ -61,7 +61,6 @@ $(() => {
     const shoppingList = ShoppingList(listRootEl);
     shoppingList.renderList();
 
-    const itemInputEl = $("#shopping-list-entry").val('fdsa')
 
     $("#js-shopping-list-form").submit(function (event) {
       const itemInputEl = $("#shopping-list-entry");
